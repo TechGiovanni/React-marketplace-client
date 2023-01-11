@@ -1,19 +1,12 @@
-import React, { useEffect, useState } from 'react'
-import Directory from './components/directory/directory.component'
+import React from 'react'
+import { Routes, Route } from 'react-router-dom'
+import Home from './routes/home/home.components'
 
 const App = () => {
-	const [categories, setCategories] = useState([])
-
-	useEffect(() => {
-		fetch('http://localhost:3001/api/v1/home/categories')
-			.then((response) => response.json())
-			.then((data) => setCategories(data))
-	}, [])
-
 	return (
-		<>
-			<Directory categories={categories} />
-		</>
+		<Routes>
+			<Route exact path='/' element={<Home />} />
+		</Routes>
 	)
 }
 
