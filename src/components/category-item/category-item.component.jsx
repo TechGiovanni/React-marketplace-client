@@ -1,4 +1,4 @@
-import './category-item.component.scss'
+import './category-item.styles.scss'
 
 import React from 'react'
 
