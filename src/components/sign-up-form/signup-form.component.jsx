@@ -1,10 +1,13 @@
 import React, { useState } from 'react'
 
+// styleSheet
 import './signup-form.styles.scss'
 
+// Components
 import FormInput from '../form-input/formInput.component'
 import Button from '../button/button.component'
 
+// Authentication
 import {
 	createAuthUserWithEmailAndPassword,
 	createUserDocumentFromAuth,
@@ -49,7 +52,7 @@ const SignUpForm = () => {
 		// We will try to create the authenticated user with email and password. that we destructured off of our form fields.
 		try {
 			const { user } = await createAuthUserWithEmailAndPassword(email, password)
-			console.log('res', user)
+
 			await createUserDocumentFromAuth(user, { displayName })
 
 			resetFormFields()

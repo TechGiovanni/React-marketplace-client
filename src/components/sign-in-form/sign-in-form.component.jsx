@@ -1,10 +1,13 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 
+// StyleSheet
 import './sign-in-form.styles.scss'
 
+// Components
 import FormInput from '../form-input/formInput.component'
 import Button from '../button/button.component'
 
+// Firebase Authentication
 import {
 	signInWithGooglePopup,
 	createUserDocumentFromAuth,
@@ -18,9 +21,10 @@ const defaultSignInFields = {
 }
 
 const SignInForm = () => {
+	// State
 	const [inputFields, setInputFields] = useState(defaultSignInFields)
-
 	const { email, password } = inputFields
+	//  Context
 
 	const handleSignInInputChange = (event) => {
 		const { name, value } = event.target
@@ -28,12 +32,18 @@ const SignInForm = () => {
 		// console.log(inputFields)
 	}
 
+	const resetFormFields = () => {
+		setInputFields(defaultSignInFields)
+	}
+
 	const handleLoginSubmit = async (event) => {
 		event.preventDefault()
 
 		try {
 			const { user } = await signInAuthUserWithEmailAndPassword(email, password)
-			console.log(user)
+
+			resetFormFields()
+			// console.log(user)
 		} catch (error) {
 			const errorCode = error.code
 			const errorMessage = error.message
@@ -57,24 +67,9 @@ const SignInForm = () => {
 		}
 	}
 
-	// useEffect(() => {
-	// 	// Now we can create the user
-	// 	const getUser = async () => {
-	// 		const response = await getRedirectResult(auth)
-	// 		if (response) {
-	// 			// then create this user from the response.user
-	// 			const userDocRef = await createUserDocumentFromAuth(response.user)
-	// 			console.log(userDocRef)
-	// 		}
-	// 	}
-	// 	getUser()
-	// }, [])
-
-	const handleGoogleSignInClick = async () => {
-		const { user } = await signInWithGooglePopup()
+	const handleGoogleLoginClick = async () => {
+		await signInWithGooglePopup()
 		// No matter what happens, we get get back a user.
-		await createUserDocumentFromAuth(user)
-		console.log('Console:', user)
 	}
 
 	return (
@@ -100,11 +95,11 @@ const SignInForm = () => {
 				/>
 				<div className='buttons-container'>
 					<Button type='submit'>Sign In</Button>
-					{/* // buttons are make to submit by default, so inorder to prevent a submit form when you click google sign in, we use the type attribute to just button. and this will prevent the button from submitting the sign in form.  */}
+					{/* // buttons are make to submit by default, so in order to prevent a submit form when you click google sign in, we use the type attribute to just button. and this will prevent the button from submitting the sign in form.  */}
 					<Button
 						type='button'
 						buttonType='google'
-						onClick={handleGoogleSignInClick}
+						onClick={handleGoogleLoginClick}
 					>
 						{' '}
 						Google SignIn
