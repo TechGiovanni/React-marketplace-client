@@ -18,8 +18,13 @@ export const UserProvider = ({ children }) => {
 		const unsubscribe = onAuthStateChangedListener((user) => {
 			// we only want to create this document if a user is logged in
 			if (user) {
+				// User is signed in, see docs for a list of available properties
+				// https://firebase.google.com/docs/reference/js/firebase.User
+				// const uid = user.uid; // from the docs
 				createUserDocumentFromAuth(user)
 			}
+			// Otherwise User is signed out. Returning null
+			// ...
 			setCurrentUser(user)
 		})
 

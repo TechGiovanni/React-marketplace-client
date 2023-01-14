@@ -1,19 +1,25 @@
-import React, { useState } from 'react'
+import { useState, useEffect, useContext } from 'react'
+import { useNavigate } from 'react-router-dom'
 
 // StyleSheet
 import './sign-in-form.styles.scss'
 
+//context
+import { LoadingContext } from '../../contexts/loading.context'
+
 // Components
 import FormInput from '../form-input/formInput.component'
 import Button from '../button/button.component'
+import ReactSpinner from '../react-spinner/react-spinner.component'
 
 // Firebase Authentication
 import {
+	auth,
 	signInWithGooglePopup,
-	createUserDocumentFromAuth,
+	signInWithFacebookRedirect,
 	signInAuthUserWithEmailAndPassword,
 } from '../../utils/firebase/firebase.utils'
-// import { getRedirectResult } from 'firebase/auth'
+import { getRedirectResult } from 'firebase/auth'
 
 const defaultSignInFields = {
 	email: '',
@@ -23,8 +29,12 @@ const defaultSignInFields = {
 const SignInForm = () => {
 	// State
 	const [inputFields, setInputFields] = useState(defaultSignInFields)
-	const { email, password } = inputFields
+
 	//  Context
+	const { loading, setLoading } = useContext(LoadingContext)
+
+	const { email, password } = inputFields
+	const navigate = useNavigate()
 
 	const handleSignInInputChange = (event) => {
 		const { name, value } = event.target
@@ -36,15 +46,20 @@ const SignInForm = () => {
 		setInputFields(defaultSignInFields)
 	}
 
-	const handleLoginSubmit = async (event) => {
+	const handleLoginWithEmailAndPasswordOnSubmit = async (event) => {
 		event.preventDefault()
+		setLoading(true)
 
 		try {
-			const { user } = await signInAuthUserWithEmailAndPassword(email, password)
+			await signInAuthUserWithEmailAndPassword(email, password)
 
 			resetFormFields()
-			// console.log(user)
+
+			setLoading(false)
+			navigate('/')
+			//
 		} catch (error) {
+			//
 			const errorCode = error.code
 			const errorMessage = error.message
 
@@ -68,45 +83,90 @@ const SignInForm = () => {
 	}
 
 	const handleGoogleLoginClick = async () => {
+		setLoading(true)
 		await signInWithGooglePopup()
+		setLoading(false)
+		navigate('/')
 		// No matter what happens, we get get back a user.
 	}
 
+	const handleFacebookLoginClick = async () => {
+		setLoading(true)
+		const result = signInWithFacebookRedirect()
+
+		return result
+	}
+
+	useEffect(() => {
+		const getUser = async () => {
+			setLoading(true)
+			const response = await getRedirectResult(auth)
+			// setLoading(true)
+			if (response) {
+				// then create this user from the response.user
+				console.log('response', response.user)
+				setLoading(false)
+				navigate('/')
+			}
+			setLoading(false)
+		}
+
+		getUser()
+	}, [navigate, setLoading])
+
 	return (
-		<div className='sign-up-container'>
-			<h2>Already have an account?</h2>
-			<span>Sign in with your email and password</span>
-			<form onSubmit={handleLoginSubmit}>
-				<FormInput
-					label='Email'
-					type='email'
-					required
-					onChange={handleSignInInputChange}
-					name='email'
-					value={email}
-				/>
-				<FormInput
-					label='Password'
-					type='password'
-					required
-					onChange={handleSignInInputChange}
-					name='password'
-					value={password}
-				/>
-				<div className='buttons-container'>
-					<Button type='submit'>Sign In</Button>
-					{/* // buttons are make to submit by default, so in order to prevent a submit form when you click google sign in, we use the type attribute to just button. and this will prevent the button from submitting the sign in form.  */}
-					<Button
-						type='button'
-						buttonType='google'
-						onClick={handleGoogleLoginClick}
-					>
-						{' '}
-						Google SignIn
-					</Button>
+		<>
+			{loading ? (
+				<ReactSpinner />
+			) : (
+				<div className='sign-up-container'>
+					<h2>Already have an account?</h2>
+					<span>Sign in with your email and password</span>
+					<form onSubmit={handleLoginWithEmailAndPasswordOnSubmit}>
+						<FormInput
+							label='Email'
+							type='email'
+							required
+							onChange={handleSignInInputChange}
+							name='email'
+							value={email}
+						/>
+						<FormInput
+							label='Password'
+							type='password'
+							required
+							onChange={handleSignInInputChange}
+							name='password'
+							value={password}
+						/>
+						<div className='buttons-container'>
+							<div>
+								<Button type='submit'>Sign In</Button>
+							</div>
+							{/* // buttons are make to submit by default, so in order to prevent a submit form when you click google sign in, we use the type attribute to just button. and this will prevent the button from submitting the sign in form.  */}
+							<h3>Social Sign In:</h3>
+							<div className='buttons-social-container'>
+								<Button
+									type='button'
+									buttonType='inverted'
+									onClick={handleGoogleLoginClick}
+								>
+									Google SignIn
+								</Button>
+								<Button
+									type='button'
+									buttonType='google'
+									onClick={handleFacebookLoginClick}
+								>
+									{' '}
+									Facebook
+								</Button>
+							</div>
+						</div>
+					</form>
 				</div>
-			</form>
-		</div>
+			)}
+		</>
 	)
 }
 

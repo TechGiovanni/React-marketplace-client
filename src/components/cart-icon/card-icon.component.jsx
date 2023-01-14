@@ -11,7 +11,6 @@ const CardIcon = () => {
 
 	const handleCartDropdownOnClick = () => {
 		setIsCartOpen(!isCartOpen)
-		console.log(isCartOpen)
 	}
 
 	return (

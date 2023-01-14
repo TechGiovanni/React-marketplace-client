@@ -5,6 +5,8 @@ import {
 	signInWithRedirect,
 	signInWithPopup,
 	GoogleAuthProvider,
+	FacebookAuthProvider,
+	getRedirectResult,
 	createUserWithEmailAndPassword,
 	signInWithEmailAndPassword,
 	signOut,
@@ -24,13 +26,27 @@ const firebaseConfig = {
 
 // Initialize Firebase
 const firebaseApp = initializeApp(firebaseConfig)
+export const auth = getAuth(firebaseApp) // holds the initialize app and the api key/Data
+
+export const getFacebookRedirectResult = () => {
+	if (auth) {
+		const user = getRedirectResult(auth)
+		console.log('result', user)
+	}
+}
+
+const facebookProvider = new FacebookAuthProvider()
+facebookProvider.addScope('public_profile')
+
+export const signInWithFacebookRedirect = () => {
+	signInWithRedirect(auth, facebookProvider)
+}
 
 const googleProvider = new GoogleAuthProvider()
 googleProvider.getCustomParameters({
 	prompt: 'select_account',
 })
 
-export const auth = getAuth()
 export const signInWithGooglePopup = () => signInWithPopup(auth, googleProvider)
 export const signInWithGoogleRedirect = () =>
 	signInWithRedirect(auth, googleProvider)
@@ -68,6 +84,7 @@ export const createUserDocumentFromAuth = async (
 	return userDocRef
 }
 
+// Create in a user
 export const createAuthUserWithEmailAndPassword = async (email, password) => {
 	// if theirs no email value or password value
 	if (!email || !password) return
@@ -75,17 +92,26 @@ export const createAuthUserWithEmailAndPassword = async (email, password) => {
 	return await createUserWithEmailAndPassword(auth, email, password)
 }
 
+// Sign in a user
 export const signInAuthUserWithEmailAndPassword = async (email, password) => {
 	// if theirs no email value or password value
 	if (!email || !password) return
 
-	return await signInWithEmailAndPassword(auth, email, password)
+	// Pass the user email and password from the login form to the signInWithEmailAndPassword firebase function
+	// userCredential has three attributes, and one of them is the user itself.
+	const userCredential = await signInWithEmailAndPassword(auth, email, password)
+
+	console.log(userCredential.user)
+
+	return userCredential
 }
 
+// Sign out user
 export const signOutUser = async () => {
 	return await signOut(auth)
 }
 
+// authenticated user State change listener, when a user log in or sign out
 export const onAuthStateChangedListener = (callback) => {
 	onAuthStateChanged(auth, callback)
 }

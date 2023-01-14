@@ -16,7 +16,7 @@ import './Navigation.component.scss'
 
 const Navigation = () => {
 	const { currentUser } = useContext(UserContext)
-	const { isCartOpen, setIsCartOpen } = useContext(CartContext)
+	const { isCartOpen } = useContext(CartContext)
 
 	const handleSignOutOnClick = async () => {
 		await signOutUser()

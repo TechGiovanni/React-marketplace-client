@@ -10,17 +10,20 @@ import './index.scss'
 import { UserProvider } from './contexts/user.context'
 import { ProductsProvider } from './contexts/products.context'
 import { CartProvider } from './contexts/cart.context'
+import { LoadingProvider } from './contexts/loading.context'
 
 const root = ReactDOM.createRoot(document.getElementById('root'))
 root.render(
 	<React.StrictMode>
 		<BrowserRouter>
 			<UserProvider>
-				<ProductsProvider>
-					<CartProvider>
-						<App />
-					</CartProvider>
-				</ProductsProvider>
+				<LoadingProvider>
+					<ProductsProvider>
+						<CartProvider>
+							<App />
+						</CartProvider>
+					</ProductsProvider>
+				</LoadingProvider>
 			</UserProvider>
 		</BrowserRouter>
 	</React.StrictMode>
