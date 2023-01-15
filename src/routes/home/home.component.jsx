@@ -1,8 +1,9 @@
-import { useEffect, useState, useContext } from 'react'
+import { useState } from 'react'
+// import { useEffect, useContext } from 'react'
 import Directory from '../../components/directory/directory.component'
 
 //context
-import { LoadingContext } from '../../contexts/loading.context'
+// import { LoadingContext } from '../../contexts/loading.context'
 
 // Data
 import CATEGORY_DATA from '../../components/app-data/categories.json'

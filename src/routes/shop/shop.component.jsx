@@ -5,8 +5,10 @@ import './shop.styles.scss'
 import AOS from 'aos'
 import 'aos/dist/aos.css'
 
+// Components
 import ProductCard from '../../components/product-card/product-card.component'
 
+// context
 import { ProductsContext } from '../../contexts/products.context'
 
 const Shop = () => {
