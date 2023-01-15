@@ -12,7 +12,16 @@ import {
 	signOut,
 	onAuthStateChanged,
 } from 'firebase/auth'
-import { getFirestore, doc, getDoc, setDoc } from 'firebase/firestore'
+import {
+	getFirestore,
+	doc,
+	getDoc,
+	setDoc,
+	collection,
+	writeBatch,
+	query,
+	getDocs,
+} from 'firebase/firestore'
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
@@ -114,4 +123,40 @@ export const signOutUser = async () => {
 // authenticated user State change listener, when a user log in or sign out
 export const onAuthStateChangedListener = (callback) => {
 	onAuthStateChanged(auth, callback)
+}
+
+// upload data to the collections in firebase
+export const addCollectionAndDocuments = async (
+	collectionName,
+	objectToAdd
+) => {
+	const collectionReference = collection(db, collectionName)
+	const batch = writeBatch(db)
+
+	// for each object inside the array, in which we have 5.
+	// Create a new document reference for each object where the key is the title and the value is the object itself.
+	// this is our entire batch
+	objectToAdd.forEach((object) => {
+		const docRef = doc(collectionReference, object.title.toLowerCase())
+		// batchset on this document reference
+		batch.set(docRef, object)
+	})
+
+	// this will fire off the batch
+	await batch.commit()
+}
+
+export const getCategoriesAndDocuments = async () => {
+	const collectionReference = collection(db, 'categories')
+
+	// I want to generate a query of of this collection
+	const q = query(collectionReference)
+	const querySnapshot = await getDocs(q)
+	// this will return an array of all of those inidividual documents inside and the snapShots are the actual data themselves.
+	const categoryMap = querySnapshot.docs.reduce((acc, docSnapshot) => {
+		const { title, items } = docSnapshot.data()
+		acc[title.toLowerCase()] = items
+		return acc
+	}, {})
+	return categoryMap
 }

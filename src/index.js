@@ -8,7 +8,7 @@ import './index.scss'
 
 // contexts
 import { UserProvider } from './contexts/user.context'
-import { ProductsProvider } from './contexts/products.context'
+import { CategoriesProvider } from './contexts/categories.context'
 import { CartProvider } from './contexts/cart.context'
 import { LoadingProvider } from './contexts/loading.context'
 
@@ -18,11 +18,11 @@ root.render(
 		<BrowserRouter>
 			<UserProvider>
 				<LoadingProvider>
-					<ProductsProvider>
+					<CategoriesProvider>
 						<CartProvider>
 							<App />
 						</CartProvider>
-					</ProductsProvider>
+					</CategoriesProvider>
 				</LoadingProvider>
 			</UserProvider>
 		</BrowserRouter>
