@@ -1,19 +1,25 @@
 import { createContext, useEffect, useState } from 'react'
 
 const removeCartItem = (cartItems, itemToRemove) => {
-	//
+	// Filter removes whatever matches
 	const reduceCart = cartItems.filter((item) => {
-		console.log('filter Item', item)
+		// console.log('filter Item', item)
 		return item.id !== itemToRemove.id
 	})
 
-	console.log('filter Item After', reduceCart)
+	// one liner Syntax
+	// cartItems.filter((item) => item.id !== itemToRemove.id)
+	// or
+	// make this whole function a One Liner Syntax
+	// const removeCartItem = (cartItems, itemToRemove) => cartItems.filter((item) => item.id !== itemToRemove.id)
+
 	return [...reduceCart]
 }
 
 const decreaseCartItem = (cartItems, itemToDecrease) => {
 	// console.log('itemToDecrease', itemToDecrease.quantity)
-	if (itemToDecrease.quantity > 0) {
+	// if item quantity is 2, then decrease to 1
+	if (itemToDecrease.quantity > 1) {
 		const newCart = cartItems.map((cartItem) => {
 			//
 			// console.log('cartItem Q', cartItem.quantity)
@@ -24,6 +30,16 @@ const decreaseCartItem = (cartItems, itemToDecrease) => {
 		})
 
 		return newCart
+	}
+	// if item quantity is equal to 1, then if you decrease again, it will filter out that item. as 0 items will not be shown
+	// if item reaches 0, remove it from the cart
+	if (itemToDecrease.quantity === 1) {
+		const newCartObj = cartItems.filter((item) => {
+			return item.id !== itemToDecrease.id
+		})
+
+		console.log('Less than 1', newCartObj)
+		return [...newCartObj]
 	}
 
 	return [...cartItems]
@@ -68,12 +84,14 @@ export const CartContext = createContext({
 	removeItemFromCart: () => {},
 
 	cartCount: 0,
+	cartTotal: 0,
 })
 
 export const CartProvider = ({ children }) => {
 	const [isCartOpen, setIsCartOpen] = useState(false)
 	const [cartItems, setCartItems] = useState(defaultData)
 	const [cartCount, setCartCount] = useState(0)
+	const [cartTotal, setCartTotal] = useState(0)
 
 	// anytime the cart items changes in any way, rerender the page, with the sum of all the items.
 	useEffect(() => {
@@ -83,16 +101,23 @@ export const CartProvider = ({ children }) => {
 		setCartCount(newTotal)
 	}, [cartItems])
 
+	useEffect(() => {
+		const newCartTotal = cartItems.reduce((total, currentCartItem) => {
+			return total + currentCartItem.quantity * currentCartItem.price
+		}, 0)
+		setCartTotal(newCartTotal)
+	}, [cartItems])
+
 	const addItemToCart = (productToAdd) => {
 		// [] Check if you need to render a new cart item, if it is not already in the cart
 		// [] or Find the existing cart item for this product and just increase the quantity by one.
 		// set cart items, passing through the cart items,
 		// As well as the product to add.
-		console.log('New Product To Add', productToAdd)
+		// console.log('New Product To Add', productToAdd)
 
 		setCartItems(addCartItem(cartItems, productToAdd))
 
-		console.log('Update finished', cartItems)
+		// console.log('Update finished', cartItems)
 	}
 
 	const decrementItemFromCart = (itemToDecrease) => {
@@ -111,6 +136,7 @@ export const CartProvider = ({ children }) => {
 		cartCount,
 		decrementItemFromCart,
 		removeCartItemFromCart,
+		cartTotal,
 	}
 
 	return <CartContext.Provider value={value}>{children}</CartContext.Provider>

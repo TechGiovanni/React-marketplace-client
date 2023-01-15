@@ -5,31 +5,40 @@ import { useContext } from 'react'
 import { CartContext } from '../../contexts/cart.context'
 
 // components
-import CheckoutItem from './checkout-Item.component'
+import CheckoutItem from '../../components/checkout-item/checkout-Item.component'
 
 const CheckOut = () => {
-	const { cartItems } = useContext(CartContext)
+	const { cartItems, cartTotal } = useContext(CartContext)
 
 	return (
 		<div className='checkout-container'>
-			<div className='heading'>
-				<span>Product</span>
-				<span>Description</span>
-				<span>Quantity</span>
-				<span>Price</span>
-				<span>Remove</span>
+			<div className='checkout-header'>
+				<div className='header-block'>
+					{' '}
+					<span> Product</span>
+				</div>
+				<div className='header-block'>
+					{' '}
+					<span> Description</span>
+				</div>
+				<div className='header-block'>
+					{' '}
+					<span>Quantity</span>{' '}
+				</div>
+				<div className='header-block'>
+					{' '}
+					<span> Price</span>
+				</div>
+				<div className='header-block'>
+					{' '}
+					<span> Remove</span>
+				</div>
 			</div>
-			<hr />
+
 			{cartItems.map((item) => {
 				return <CheckoutItem key={item.id} item={item} />
 			})}
-			<p>
-				total: ${' '}
-				{cartItems.reduce((total, currentItem) => {
-					const result = currentItem.price * currentItem.quantity
-					return total + result
-				}, 0)}
-			</p>
+			<span className='total'>total: $ {cartTotal}</span>
 		</div>
 	)
 }
