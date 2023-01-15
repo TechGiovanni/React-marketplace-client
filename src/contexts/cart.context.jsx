@@ -1,5 +1,34 @@
 import { createContext, useEffect, useState } from 'react'
 
+const removeCartItem = (cartItems, itemToRemove) => {
+	//
+	const reduceCart = cartItems.filter((item) => {
+		console.log('filter Item', item)
+		return item.id !== itemToRemove.id
+	})
+
+	console.log('filter Item After', reduceCart)
+	return [...reduceCart]
+}
+
+const decreaseCartItem = (cartItems, itemToDecrease) => {
+	// console.log('itemToDecrease', itemToDecrease.quantity)
+	if (itemToDecrease.quantity > 0) {
+		const newCart = cartItems.map((cartItem) => {
+			//
+			// console.log('cartItem Q', cartItem.quantity)
+			//
+			return cartItem.id === itemToDecrease.id
+				? { ...cartItem, quantity: cartItem.quantity - 1 }
+				: cartItem
+		})
+
+		return newCart
+	}
+
+	return [...cartItems]
+}
+
 // this functions is used to try an find a product that matches whats already inside the cart.
 // It takes the products and the product you want t add to the cart
 const addCartItem = (cartItems, productToAdd) => {
@@ -36,6 +65,7 @@ export const CartContext = createContext({
 	setIsCartOpen: () => {},
 	cartItems: [],
 	addItemToCart: () => {},
+	removeItemFromCart: () => {},
 
 	cartCount: 0,
 })
@@ -65,12 +95,22 @@ export const CartProvider = ({ children }) => {
 		console.log('Update finished', cartItems)
 	}
 
+	const decrementItemFromCart = (itemToDecrease) => {
+		setCartItems(decreaseCartItem(cartItems, itemToDecrease))
+	}
+
+	const removeCartItemFromCart = (itemToRemove) => {
+		setCartItems(removeCartItem(cartItems, itemToRemove))
+	}
+
 	const value = {
 		setIsCartOpen,
 		isCartOpen,
 		cartItems,
 		addItemToCart,
 		cartCount,
+		decrementItemFromCart,
+		removeCartItemFromCart,
 	}
 
 	return <CartContext.Provider value={value}>{children}</CartContext.Provider>
