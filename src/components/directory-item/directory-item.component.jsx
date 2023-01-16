@@ -3,14 +3,14 @@ import { useContext, useEffect } from 'react'
 //context
 import { LoadingContext } from '../../contexts/loading.context'
 
-import './category-item.styles.scss'
+import './directory-item.styles.scss'
 
 // Components
 import ReactSpinner from '../react-spinner/react-spinner.component'
 import AOS from 'aos'
 import 'aos/dist/aos.css'
 
-const CategoryItem = ({ category }) => {
+const DirectoryItem = ({ category }) => {
 	const { loading } = useContext(LoadingContext)
 
 	const { imageUrl, title } = category
@@ -22,7 +22,7 @@ const CategoryItem = ({ category }) => {
 	return (
 		<>
 			<div
-				className='category-container'
+				className='directory-item-container'
 				data-aos='fade-up'
 				data-aos-duration='1250'
 			>
@@ -36,7 +36,7 @@ const CategoryItem = ({ category }) => {
 								backgroundImage: `url(${imageUrl})`,
 							}}
 						></div>
-						<div className='category-body-container'>
+						<div className='directory-item-body-container'>
 							<h2>{title}</h2>
 							<p>Shop work</p>
 						</div>
@@ -47,4 +47,4 @@ const CategoryItem = ({ category }) => {
 	)
 }
 
-export default CategoryItem
+export default DirectoryItem
