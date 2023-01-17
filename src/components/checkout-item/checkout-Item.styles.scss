@@ -3,11 +3,13 @@
 .checkout-item-container {
   width: 100%;
   display: flex;
+  justify-content: space-between;
   min-height: 100px;
   border-bottom: 1px solid darkgrey;
   padding: 15px 0;
   font-size: 20px;
   align-items: center;
+
 
   .image-container {
     width: 23%;

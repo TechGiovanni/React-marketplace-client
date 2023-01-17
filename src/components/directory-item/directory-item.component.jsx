@@ -3,7 +3,13 @@ import { useContext, useEffect } from 'react'
 //context
 import { LoadingContext } from '../../contexts/loading.context'
 
+// Stylesheet
 import './directory-item.styles.scss'
+import {
+	BackgroundImage,
+	DirectoryItemBodyContainer,
+	DirectoryItemContainer,
+} from './directory-item.styles.jsx'
 
 // Components
 import ReactSpinner from '../react-spinner/react-spinner.component'
@@ -30,16 +36,13 @@ const DirectoryItem = ({ category }) => {
 					<ReactSpinner />
 				) : (
 					<>
-						<div
-							className='background-image'
-							style={{
-								backgroundImage: `url(${imageUrl})`,
-							}}
-						></div>
-						<div className='directory-item-body-container'>
-							<h2>{title}</h2>
-							<p>Shop work</p>
-						</div>
+						<DirectoryItemContainer>
+							<BackgroundImage imageUrl={imageUrl}></BackgroundImage>
+							<DirectoryItemBodyContainer>
+								<h2>{title}</h2>
+								<p>Shop work</p>
+							</DirectoryItemBodyContainer>
+						</DirectoryItemContainer>
 					</>
 				)}
 			</div>

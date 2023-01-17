@@ -9,7 +9,7 @@ import { LoadingContext } from '../../contexts/loading.context'
 
 // Components
 import FormInput from '../form-input/formInput.component'
-import Button from '../button/button.component'
+import Button, { BUTTON_TYPE_CLASSES } from '../button/button.component'
 import ReactSpinner from '../react-spinner/react-spinner.component'
 
 // Firebase Authentication
@@ -148,14 +148,14 @@ const SignInForm = () => {
 							<div className='buttons-social-container'>
 								<Button
 									type='button'
-									buttonType='inverted'
+									buttonType={BUTTON_TYPE_CLASSES.inverted}
 									onClick={handleGoogleLoginClick}
 								>
 									Google SignIn
 								</Button>
 								<Button
 									type='button'
-									buttonType='google'
+									buttonType={BUTTON_TYPE_CLASSES.google}
 									onClick={handleFacebookLoginClick}
 								>
 									{' '}

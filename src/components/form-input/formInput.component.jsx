@@ -1,6 +1,8 @@
 import React from 'react'
 
+// stylesheet
 import './formInput.styles.scss'
+import {} from './formInput.styles.jsx'
 
 const formInput = ({ label, ...rest }) => {
 	return (
